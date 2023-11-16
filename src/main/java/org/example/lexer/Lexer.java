@@ -1,49 +1,30 @@
 package org.example.lexer;
 
 import org.example.enums.Tipos;
-import org.example.enums.Utils;
 
 import java.util.*;
-import java.util.stream.Collectors;
+import java.util.regex.Pattern;
 
 public class Lexer {
 
-    public Lexer(List<String> input){
-        List<String> tokensSinSanitizar = input.stream()
-                                            .map(s -> s.replaceAll("\n", ""))
-                                            .filter(s -> filtro(s))
-                                            .toList();
+    public Lexer(){
+    }
 
-        //lineas para obtener informacion de todos los productos
-        String articulo = input.stream()
-                            .map(s -> s.replaceAll("\n", ""))
-                            .filter(s -> s.startsWith(Tipos.ARTICULOS.patron))
-                            .collect(Collectors.joining());
-        String articulos[] = articulo.split(Utils.COSTO.util);
+    public List<String> generarToken(String input){
+        String[] inputs = input.split("\n");
 
-        //se obtiene el valor total de la compra
-        Integer costoTotal = Arrays.stream(articulos)
-                                .map(s -> s.replaceAll(" ", ""))
-                                .map(s -> s.replaceAll(Utils.BASURA.util, ""))
-                                .map(s -> s.replaceAll(Utils.MASBASURA.util, ""))
-                                .filter(s -> !s.isBlank())
-                                .mapToInt(Integer::parseInt)
-                                .sum();
+        List<String> tokens = Arrays.stream(inputs)
+                        .map(t -> t.replaceAll(" ", ""))
+                        .filter(Lexer::filtro)
+                        .map(t -> t.replaceAll(">", ":"))
+                        .map(t -> t.replaceAll("<", ""))
+                        .map(t -> t.replaceAll("\\/[a-zA-Z:]+", ""))
+                        .toList();
 
-        tokensSinSanitizar = tokensSinSanitizar.stream()
-                .filter(s -> !s.startsWith(Tipos.ARTICULOS.patron))
-                .toList();
-
-        List<String> tokens = new ArrayList<>(tokensSinSanitizar);
-
-        tokens.add("costoTotal: " + costoTotal);
-
-        System.out.println(tokens);
-
+        return tokens;
     }
 
     private static Boolean filtro(String s){
-
         for (Tipos tipo : Tipos.values()){
             if (s.startsWith(tipo.patron)){
                 return true;

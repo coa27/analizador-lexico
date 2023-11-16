@@ -9,11 +9,12 @@ public enum Tipos {
 //    ASIGNACION ("[:]"),
 //    FECHA ("^\\d{4}-\\d{2}-\\d{2}$"),
 //    HORA ("^\\d{2}:\\d{2}:\\d{2}$\"$");
+//    UBICACION ("ubicacionToEnviar"),
 
-    ESTADO ("estado:"),
-    DATETIME ("dateTime:"),
-    UBICACION ("ubicacionToEnviar:"),
-    ARTICULOS ("articulos:");
+    ESTADO ("<estado>"),
+    FECHA ("<fecha>"),
+    NOMBRES ("<marca>"),
+    MONTO ("<monto>");
 
     public final String patron;
 
